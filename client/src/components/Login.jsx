@@ -1,34 +1,15 @@
-import React, { useEffect } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { useMutation, gql } from '@apollo/client';
-import { useAuth } from '../context/authContext';
-
-const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
-    authenticateUserWithPassword(email: $email, password: $password) {
-      ... on UserAuthenticationWithPasswordSuccess {
-        sessionToken
-        item {
-          id
-          name
-          image {
-            url
-          }
-        }
-      }
-      ... on UserAuthenticationWithPasswordFailure {
-        message
-      }
-    }
-  }
-`;
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useLogin from '../hooks/useLogin';
 
 const coverImg = `/images/login_page_img.webp`;
 
 const Login = () => {
-  const [reqLogin, { loading, error }] = useMutation(LOGIN_MUTATION);
-
-  const { setIsLoggedIn } = useAuth();
+  const { loading, login } = useLogin();
+  const [formValue, setFormValue] = useState({
+    email: '',
+    password: '',
+  });
 
   useEffect(() => {
     document.title = 'Login';
@@ -39,31 +20,13 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const email = e.target['email'].value;
-    const password = e.target['password'].value;
+    login(formValue.email, formValue.password);
+  };
 
-    reqLogin({
-      variables: {
-        email,
-        password,
-      },
-      onCompleted: ({ authenticateUserWithPassword: authData }) => {
-        if (
-          authData.__typename ===
-          'UserAuthenticationWithPasswordFailure'
-        ) {
-          // setError
-          console.log(authData.message);
-        } else if (
-          authData.__typename ===
-          'UserAuthenticationWithPasswordSuccess'
-        ) {
-          localStorage.setItem('token', authData.sessionToken);
-          setIsLoggedIn(true);
-          // setUserData
-        }
-      },
-    });
+  const handleInputChange = (e) => {
+    const element = e.target;
+
+    setFormValue((v) => ({ ...v, [element.name]: element.value }));
   };
 
   return (
@@ -78,8 +41,10 @@ const Login = () => {
             <input
               type="text"
               id="email"
-              name="name"
+              name="email"
               placeholder="Enter email"
+              value={formValue.email}
+              onChange={handleInputChange}
               required
             />
           </label>
@@ -89,10 +54,16 @@ const Login = () => {
               id="password"
               name="password"
               placeholder="Enter your password"
+              value={formValue.password}
+              onChange={handleInputChange}
               required
             />
           </label>
-          <button aria-busy={loading} type="submit">
+          <button
+            aria-busy={loading}
+            type="submit"
+            disabled={loading}
+          >
             Login
           </button>
         </form>

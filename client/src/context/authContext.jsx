@@ -1,10 +1,8 @@
 import { gql, useQuery } from '@apollo/client';
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useContext, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import { ERROR_TOAST_OPTIONS } from '../utils/tostOptions';
 
 const authContext = createContext();
 
@@ -38,22 +36,25 @@ const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState();
   const { loading, error } = useQuery(TOKEN_VALIDATE_QUERY, {
-    onCompleted: (data) => {
-      if (!data.authenticatedItem) {
+    onCompleted: ({ authenticatedItem }) => {
+      if (!authenticatedItem) {
         setIsLoggedIn(false);
-        localStorage.removeItem('token');
-        // setError
-        console.log('somthing is wrong: authContext');
+        if (localStorage.getItem('token')) {
+          localStorage.removeItem('token');
+          toast.warning(
+            'Previous login expired',
+            ERROR_TOAST_OPTIONS
+          );
+        }
         return;
       }
       setIsLoggedIn(true);
-      // setUserData
+      setUserData(authenticatedItem);
     },
   });
 
   if (error) {
-    // setError
-    console.log(error);
+    toast.error(error.message, ERROR_TOAST_OPTIONS);
   }
 
   if (loading)

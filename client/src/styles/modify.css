@@ -46,6 +46,7 @@ footer {
   object-fit: cover;
   border-radius: 10px;
   cursor: pointer;
+  border: 1px solid #374956;
 }
 
 .upload_preview_wrapper > input {
@@ -75,6 +76,10 @@ footer {
   animation-name: 'fade';
   animation-duration: 300ms;
   animation-iteration-count: 1;
+}
+
+.Toastify__close-button {
+  width: auto !important;
 }
 
 @keyframes fade {

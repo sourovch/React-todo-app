@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
+import useLogin from '../hooks/useLogin';
+import { toast } from 'react-toastify';
+
+import { ERROR_TOAST_OPTIONS } from '../utils/tostOptions';
 
 const coverImg = '/images/reg_page_img.webp';
 const uploadPlaceholder = '/images/upload_placeholder.webp';
@@ -15,19 +19,24 @@ const CREATE_USER_QUERY = gql`
 `;
 
 const Register = () => {
+  const { loading: loginLoad, login } = useLogin();
   const [selectedImg, setSelectedImg] = useState(undefined);
   const [uploadPreview, setUploadPriview] =
     useState(uploadPlaceholder);
-  const navigate = useNavigate();
+  const [formValue, setFormValue] = useState({
+    name: '',
+    email: '',
+    password: '',
+    conformation: '',
+  });
 
   // Register query
-  const [reqCreateUser, { data, loading, error }] =
+  const [reqCreateUser, { loading: regLoad }] =
     useMutation(CREATE_USER_QUERY);
 
   useEffect(() => {
     if (!selectedImg) return;
 
-    console.log(selectedImg);
     const objectUrl = URL.createObjectURL(selectedImg);
     setUploadPriview(objectUrl);
 
@@ -54,27 +63,39 @@ const Register = () => {
     const email = e.target['email'].value;
     const password = e.target['password'].value;
 
+    let qureyData = {
+      name,
+      email,
+      password,
+    };
+
+    if (selectedImg) {
+      qureyData = {
+        ...qureyData,
+        image: {
+          upload: selectedImg,
+        },
+      };
+    }
+
     reqCreateUser({
       variables: {
-        data: {
-          name,
-          email,
-          password,
-          image: {
-            upload: selectedImg,
-          },
-        },
+        data: qureyData,
       },
-      onCompleted: () => {
-        // try to impliment login
-
-        navigate('/login');
+      onCompleted: ({ createUser: user }) => {
+        login(user.email, password);
       },
 
       onError: (err) => {
-        console.log(err);
+        toast.error(err.message, ERROR_TOAST_OPTIONS);
       },
     });
+  };
+
+  const handleInputChange = (e) => {
+    const element = e.target;
+
+    setFormValue((v) => ({ ...v, [element.name]: element.value }));
   };
 
   return (
@@ -105,6 +126,8 @@ const Register = () => {
               id="name"
               name="name"
               placeholder="Enter your name"
+              value={formValue.name}
+              onChange={handleInputChange}
               required
             />
           </label>
@@ -115,6 +138,8 @@ const Register = () => {
               id="email"
               name="email"
               placeholder="Enter your Email"
+              value={formValue.email}
+              onChange={handleInputChange}
               required
             />
           </label>
@@ -126,6 +151,8 @@ const Register = () => {
                 id="password"
                 name="password"
                 placeholder="New password"
+                value={formValue.password}
+                onChange={handleInputChange}
                 required
               />
             </label>
@@ -136,11 +163,18 @@ const Register = () => {
                 id="conformation"
                 name="conformation"
                 placeholder="Confirm password"
+                value={formValue.conformation}
+                onChange={handleInputChange}
                 required
               />
             </label>
           </div>
-          <button type="submit" className="w-auto">
+          <button
+            type="submit"
+            className="w-auto"
+            aria-busy={loginLoad || regLoad}
+            disabled={loginLoad || regLoad}
+          >
             Create your account
           </button>
         </form>

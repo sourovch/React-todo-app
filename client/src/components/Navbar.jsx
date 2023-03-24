@@ -6,22 +6,10 @@ import {
   BsFillLightbulbOffFill,
 } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import useDebaunce from '../hooks/useDebaunce';
+import { useTheme } from '../context/themeContex';
 
 const Navbar = () => {
-  const [theme, setTheme] = useState(
-    localStorage.getItem('theme') || 'dark'
-  );
-
-  const debaunceValue = useDebaunce(theme, 1000);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
-
-  useEffect(() => {
-    localStorage.setItem('theme', theme);
-  }, [debaunceValue]);
+  const [theme, setTheme] = useTheme();
 
   const themeToggle = (e) => {
     e.preventDefault();
