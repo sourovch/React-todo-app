@@ -82,6 +82,10 @@ footer {
   width: auto !important;
 }
 
+label[aria-invalid='true'] {
+  color: var(--form-element-invalid-border-color);
+}
+
 @keyframes fade {
   0%,
   10% {
