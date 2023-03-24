@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import useLogin from '../hooks/useLogin';
 import { toast } from 'react-toastify';
 
 import { ERROR_TOAST_OPTIONS } from '../utils/tostOptions';
+import { CREATE_USER_QUERY } from '../utils/gqlQuerys';
 
 const coverImg = '/images/reg_page_img.webp';
 const uploadPlaceholder = '/images/upload_placeholder.webp';
-
-const CREATE_USER_QUERY = gql`
-  mutation createUser($data: UserCreateInput!) {
-    createUser(data: $data) {
-      email
-      name
-    }
-  }
-`;
 
 const Register = () => {
   const { loading: loginLoad, login } = useLogin();
@@ -29,8 +21,6 @@ const Register = () => {
     password: '',
     conformation: '',
   });
-
-  // Register query
   const [reqCreateUser, { loading: regLoad }] =
     useMutation(CREATE_USER_QUERY);
 

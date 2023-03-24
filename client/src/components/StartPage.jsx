@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/authContext';
+import useAuth from '../hooks/useAuth';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
 const StartPage = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const { isLoggedIn } = useAuth();
-
   const navigate = useNavigate();
 
   useEffect(() => {

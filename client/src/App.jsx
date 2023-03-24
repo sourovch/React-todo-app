@@ -1,20 +1,20 @@
-import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import { useAuth } from './context/authContext';
+import useAuth from './hooks/useAuth';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
   const { setIsLoggedIn } = useAuth();
 
-  useState(() => {
+  useEffect(() => {
     const timeoutkey = setTimeout(() => {
       setLoading(false);
     }, 300);
 
     return () => clearTimeout(timeoutkey);
   }, []);
+
   return loading ? (
     <div className="h-100 load-container" aria-busy={true}></div>
   ) : (

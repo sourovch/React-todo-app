@@ -1,30 +1,11 @@
 import React from 'react';
 import { useMutation, gql } from '@apollo/client';
-import { useAuth } from '../context/authContext';
+import useAuth from './useAuth';
 import { toast } from 'react-toastify';
 
 import { ERROR_TOAST_OPTIONS } from '../utils/tostOptions';
 import { SUCCESS_TOAST_OPTIONS } from '../utils/tostOptions';
-
-const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
-    authenticateUserWithPassword(email: $email, password: $password) {
-      ... on UserAuthenticationWithPasswordSuccess {
-        sessionToken
-        item {
-          id
-          name
-          image {
-            url
-          }
-        }
-      }
-      ... on UserAuthenticationWithPasswordFailure {
-        message
-      }
-    }
-  }
-`;
+import { LOGIN_MUTATION } from '../utils/gqlQuerys';
 
 function useLogin() {
   const [reqLogin, { loading }] = useMutation(LOGIN_MUTATION);

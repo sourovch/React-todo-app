@@ -3,34 +3,9 @@ import { createContext, useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { ERROR_TOAST_OPTIONS } from '../utils/tostOptions';
+import { TOKEN_VALIDATE_QUERY } from '../utils/gqlQuerys';
 
-const authContext = createContext();
-
-const TOKEN_VALIDATE_QUERY = gql`
-  query AuthenticatedItem {
-    authenticatedItem {
-      ... on User {
-        name
-        image {
-          url
-        }
-        id
-      }
-    }
-  }
-`;
-
-export const useAuth = () => {
-  const { userData, setUserData, isLoggedIn, setIsLoggedIn } =
-    useContext(authContext);
-
-  return {
-    userData,
-    setUserData,
-    isLoggedIn,
-    setIsLoggedIn,
-  };
-};
+export const authContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
