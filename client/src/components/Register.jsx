@@ -15,6 +15,8 @@ const coverImg = '/images/reg_page_img.webp';
 const uploadPlaceholder = '/images/upload_placeholder.webp';
 
 const Register = () => {
+  const [reqCreateUser, { loading: regLoad }] =
+    useMutation(CREATE_USER_QUERY);
   const { loading: loginLoad, login } = useLogin();
   const [uploadPreview, setUploadPriview] =
     useState(uploadPlaceholder);
@@ -88,16 +90,17 @@ const Register = () => {
         .required('Please confirm'),
     }),
   });
-  const [reqCreateUser, { loading: regLoad }] =
-    useMutation(CREATE_USER_QUERY);
 
   useEffect(() => {
     if (!formik.values.selectedImg) return;
 
-    const objectUrl = URL.createObjectURL(formik.values.selectedImg);
-    setUploadPriview(objectUrl);
+    const reader = new FileReader();
 
-    return () => URL.revokeObjectURL(objectUrl);
+    reader.onloadend = () => {
+      setUploadPriview(reader.result);
+    };
+
+    reader.readAsDataURL(formik.values.selectedImg);
   }, [formik.values.selectedImg]);
 
   useEffect(() => {
