@@ -23,7 +23,7 @@ const StartPage = ({ children }) => {
   return loading ? (
     <div className="load-container h-100" aria-busy={true}></div>
   ) : (
-    <div className="fade">
+    <div className="fade content-wrapper">
       <Navbar />
       <main className="container login-form">
         <article className="grid">{children}</article>

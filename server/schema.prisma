@@ -28,16 +28,19 @@ model User {
 model folder {
   id                String @id @default(cuid())
   name              String @default("")
-  todos             Todo[] @relation("folder_todos")
+  todos             Todo[] @relation("Todo_folder")
   from_User_folders User[] @relation("User_folders")
 }
 
 model Todo {
-  id                String    @id @default(cuid())
-  task              String    @default("")
-  isDone            Boolean   @default(false)
-  due               DateTime?
-  createdAt         DateTime? @default(now())
-  from_User_todos   User[]    @relation("User_todos")
-  from_folder_todos folder[]  @relation("folder_todos")
+  id              String    @id @default(cuid())
+  task            String    @default("")
+  isDone          Boolean   @default(false)
+  due             DateTime?
+  createdAt       DateTime? @default(now())
+  folder          folder?   @relation("Todo_folder", fields: [folderId], references: [id])
+  folderId        String?   @map("folder")
+  from_User_todos User[]    @relation("User_todos")
+
+  @@index([folderId])
 }

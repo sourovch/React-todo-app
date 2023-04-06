@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { BiMenuAltRight } from 'react-icons/bi';
+
+import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import useAuth from './hooks/useAuth';
+import Aside from './components/Aside';
+import { useRef } from 'react';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
-  const { setIsLoggedIn } = useAuth();
+  const { userData } = useAuth();
+  const asideRef = useRef();
 
   useEffect(() => {
     const timeoutkey = setTimeout(() => {
@@ -15,23 +21,33 @@ const App = () => {
     return () => clearTimeout(timeoutkey);
   }, []);
 
+  const toggleSMAside = () => {
+    const aside = asideRef.current;
+
+    aside.classList.toggle('active');
+  };
+
   return loading ? (
     <div className="h-100 load-container" aria-busy={true}></div>
   ) : (
-    <div className="fade">
+    <div className="fade content-wrapper">
       <Navbar />
-      <main className="container">
-        <h1>Main Content</h1>
+      <main className="container home grid-c">
+        <Aside userData={userData} />
         <button
-          onClick={() => {
-            localStorage.removeItem('token');
-            setIsLoggedIn(false);
-          }}
+          className="small-screen-aside-toggle"
+          onClick={toggleSMAside}
         >
-          Logout
+          <small>
+            <BiMenuAltRight /> Folders
+          </small>
         </button>
-        <Outlet />
+        <Aside userData={userData} smallScreen ref={asideRef} />
+        <section>
+          <Outlet />
+        </section>
       </main>
+      <Footer />
     </div>
   );
 };

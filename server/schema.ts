@@ -10,6 +10,7 @@ import {
 } from '@keystone-6/core/fields';
 import type { Lists } from '.keystone/types';
 
+
 export const lists: Lists = {
   User: list({
     access: allowAll,
@@ -50,7 +51,7 @@ export const lists: Lists = {
     fields: {
       name: text({ validation: { isRequired: true }}),
       todos: relationship({ 
-        ref: 'Todo', 
+        ref: 'Todo.folder', 
         many: true,
         ui: {
           displayMode: "cards",
@@ -60,6 +61,19 @@ export const lists: Lists = {
           inlineCreate: { fields: ['task', 'isDone', 'due']}
         } 
     })
+    },
+    hooks: {
+      async beforeOperation({ operation, item, context}) {
+        if (operation === 'delete') {
+          const todoIds = await context.query.Todo.findMany({ where: { folder: {
+            id: {
+              equals: item.id
+            }
+          }}, query: 'id'});
+
+          context.query.Todo.deleteMany({ where: todoIds });
+        }
+      }
     }
   }),
   Todo: list({
@@ -69,6 +83,15 @@ export const lists: Lists = {
       isDone: checkbox(),
       due: timestamp(),
       createdAt: timestamp({ defaultValue: { kind: 'now' }}),
+      folder: relationship({
+        ref: 'folder.todos', 
+        many: false,
+        ui: {
+          displayMode: "cards",
+          cardFields: ["name"],
+          linkToItem: true,
+        }
+      })
     }
   })
 };

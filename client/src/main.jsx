@@ -17,6 +17,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Protected from './components/Protected';
 import Toast from './components/Toast';
+import RootTasks from './components/RootTasks';
+import FolderTasks from './components/FolderTasks';
 
 import AuthProvider from './context/authContext';
 import ThemeProvider from './context/themeContex';
@@ -31,6 +33,16 @@ const router = createBrowserRouter([
         <App />
       </Protected>
     ),
+    children: [
+      {
+        path: '/',
+        element: <RootTasks />,
+      },
+      {
+        path: '/folder/:id',
+        element: <FolderTasks />,
+      },
+    ],
   },
   {
     path: '/login',

@@ -22,7 +22,10 @@ function useLogin() {
           authData.__typename ===
           'UserAuthenticationWithPasswordFailure'
         ) {
-          toast.error(authData.message, ERROR_TOAST_OPTIONS);
+          toast.error(
+            <small>incorrect Email or Password</small>,
+            ERROR_TOAST_OPTIONS
+          );
         } else if (
           authData.__typename ===
           'UserAuthenticationWithPasswordSuccess'

@@ -69,7 +69,7 @@ var lists = {
     fields: {
       name: (0, import_fields.text)({ validation: { isRequired: true } }),
       todos: (0, import_fields.relationship)({
-        ref: "Todo",
+        ref: "Todo.folder",
         many: true,
         ui: {
           displayMode: "cards",
@@ -79,6 +79,18 @@ var lists = {
           inlineCreate: { fields: ["task", "isDone", "due"] }
         }
       })
+    },
+    hooks: {
+      async beforeOperation({ operation, item, context }) {
+        if (operation === "delete") {
+          const todoIds = await context.query.Todo.findMany({ where: { folder: {
+            id: {
+              equals: item.id
+            }
+          } }, query: "id" });
+          context.query.Todo.deleteMany({ where: todoIds });
+        }
+      }
     }
   }),
   Todo: (0, import_core.list)({
@@ -87,7 +99,16 @@ var lists = {
       task: (0, import_fields.text)({ validation: { isRequired: true } }),
       isDone: (0, import_fields.checkbox)(),
       due: (0, import_fields.timestamp)(),
-      createdAt: (0, import_fields.timestamp)({ defaultValue: { kind: "now" } })
+      createdAt: (0, import_fields.timestamp)({ defaultValue: { kind: "now" } }),
+      folder: (0, import_fields.relationship)({
+        ref: "folder.todos",
+        many: false,
+        ui: {
+          displayMode: "cards",
+          cardFields: ["name"],
+          linkToItem: true
+        }
+      })
     }
   })
 };

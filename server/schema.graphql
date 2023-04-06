@@ -211,6 +211,7 @@ type Todo {
   isDone: Boolean
   due: DateTime
   createdAt: DateTime
+  folder: folder
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
@@ -228,6 +229,7 @@ input TodoWhereInput {
   isDone: BooleanFilter
   due: DateTimeNullableFilter
   createdAt: DateTimeNullableFilter
+  folder: folderWhereInput
 }
 
 input BooleanFilter {
@@ -259,6 +261,13 @@ input TodoUpdateInput {
   isDone: Boolean
   due: DateTime
   createdAt: DateTime
+  folder: folderRelateToOneForUpdateInput
+}
+
+input folderRelateToOneForUpdateInput {
+  create: folderCreateInput
+  connect: folderWhereUniqueInput
+  disconnect: Boolean
 }
 
 input TodoUpdateArgs {
@@ -271,6 +280,12 @@ input TodoCreateInput {
   isDone: Boolean
   due: DateTime
   createdAt: DateTime
+  folder: folderRelateToOneForCreateInput
+}
+
+input folderRelateToOneForCreateInput {
+  create: folderCreateInput
+  connect: folderWhereUniqueInput
 }
 
 """
