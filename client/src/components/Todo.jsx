@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TbCalendarDue } from 'react-icons/tb';
 import moment from 'moment';
-import { useState, useEffect } from 'react';
-import useDebaunce from '../hooks/useDebaunce';
-import { useRef } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
 import { AiFillDelete } from 'react-icons/ai';
 import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
+import useDebaunce from '../hooks/useDebaunce';
 import {
   DELATE_TASK_MUTATION,
   EDIT_TASK_MUTATION,
@@ -62,7 +60,7 @@ const Todo = ({
 
     document.addEventListener('click', documentClickHandler);
 
-    () => document.removeEventListener('click', documentClickHandler);
+    return () => document.removeEventListener('click', documentClickHandler);
   }, []);
 
   useEffect(() => {
@@ -147,7 +145,7 @@ const Todo = ({
         </label>
       </fieldset>
       <div className="createdAt">
-        Tracking since {moment(createdAt).format('MM Do YYYY')}
+        Tracking since {moment(createdAt).format('MMM Do YYYY')}
       </div>
     </div>
   );

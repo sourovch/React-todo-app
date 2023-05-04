@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { BiMenuAltRight } from 'react-icons/bi';
 
@@ -6,7 +6,6 @@ import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import useAuth from './hooks/useAuth';
 import Aside from './components/Aside';
-import { useRef } from 'react';
 
 const App = () => {
   const [loading, setLoading] = useState(true);

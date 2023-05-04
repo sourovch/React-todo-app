@@ -11,9 +11,9 @@ export default withAuth(
     lists,
     session,
     server: {
-      port: 3001,
+      port: 3002,
       cors: {
-        origin: ['http://localhost:3000'],
+        origin: [`${process.env.CORS_URL || 'http://localhost:3001'}`],
         credentials: true
       }
     },
@@ -21,7 +21,7 @@ export default withAuth(
       dpStorage: {
         type: 'image',
         kind: 'local',
-        generateUrl: path => 'http://localhost:3001/images/' + path,
+        generateUrl: path => (process.env.URL || 'http://localhost:3002/images/') + path,
         serverRoute: {
           path: '/images'
         },

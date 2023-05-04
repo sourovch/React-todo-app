@@ -77,7 +77,7 @@ const Aside = forwardRef(
 
       setModal(modalRef.current);
 
-      () =>
+      return () =>
         document.removeEventListener('click', documentClickHandler);
     }, []);
 

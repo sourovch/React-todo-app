@@ -1,11 +1,12 @@
 import { ToastContainer } from 'react-toastify';
 import { useTheme } from '../context/themeContex';
 
-const Toast = () => {
+const Toast = (props) => {
   const [theme] = useTheme();
 
   return (
     <ToastContainer
+      {...props}
       position="top-right"
       autoClose={5000}
       hideProgressBar={false}

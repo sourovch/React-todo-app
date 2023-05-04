@@ -3,11 +3,11 @@ import {
   CREATE_FOLDER_TASK_MUTATION,
   FOLDER_TASK_QUERY,
 } from '../utils/gqlQuerys';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { RiTodoFill } from 'react-icons/ri';
 import Todo from './Todo';
 import FolderOptions from './FolderOptions';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import moment from 'moment';
 
 const FolderTasks = () => {

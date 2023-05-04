@@ -1,14 +1,14 @@
-import { useRef, useEffect } from 'react';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import moment from 'moment';
-import { useMutation } from '@apollo/client';
-import { BsFillGridFill, BsViewList } from 'react-icons/bs';
+import { useRef, useEffect } from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import moment from "moment";
+import { useMutation } from "@apollo/client";
+import { BsFillGridFill, BsViewList } from "react-icons/bs";
 
-import useModal from '../hooks/useModal';
-import useAuth from '../hooks/useAuth';
-import { toast } from 'react-toastify';
-import { ERROR_TOAST_OPTIONS } from '../utils/tostOptions';
+import useModal from "../hooks/useModal";
+import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
+import { ERROR_TOAST_OPTIONS } from "../utils/tostOptions";
 
 const FolderOptions = ({
   setGrid,
@@ -21,34 +21,43 @@ const FolderOptions = ({
 }) => {
   const modalRef = useRef();
   const { userData } = useAuth();
-  const [reqCreateTask, { loading }] = useMutation(
-    taskCreateMutation
-  );
+  const [reqCreateTask, { loading }] = useMutation(taskCreateMutation);
   const { toggleModal, setModal } = useModal(modalRef.current);
   const formik = useFormik({
     initialValues: {
-      task: '',
-      dueDate: moment().format('YYYY-MM-DD'),
-      dueTime: moment().add(20, 'minutes').format('HH:mm'),
+      task: "",
+      dueDate: moment().format("YYYY-MM-DD"),
+      dueTime: moment().add(20, "minutes").format("HH:mm"),
     },
     validationSchema: yup.object({
       task: yup
         .string()
-        .min(3, 'Too short')
-        .max(35, 'Too big')
-        .required('Required'),
+        .min(3, "Too short")
+        .max(35, "Too big")
+        .required("Required"),
       dueDate: yup
         .date()
-        .min(moment().subtract(1, 'day').format(), 'Invalid date')
-        .required('Please enter due date'),
+        .min(moment().subtract(1, "day").format(), "Invalid date")
+        .required("Please enter due date"),
       dueTime: yup
         .string()
-        .required('Please enter due time')
-        .test('after-curr', 'Invalid Time', (value) =>
-          moment(value, 'HH:mm').isSameOrAfter(
-            moment().add(10, 'minutes')
-          )
-        ),
+        .required("Please enter due time")
+        .test('isTime', 'InValid Time', (value) => moment(value, "hh:mm").isValid())
+        .when("dueDate", {
+          is: (dueDate) =>
+            moment(moment(dueDate).format("YYYY-MM-DD")).isSame(
+              moment().format("YYYY-MM-DD")
+            ),
+          then: () =>
+            yup
+              .string()
+              .required()
+              .test("after-curr", "Invalid Time", (value) =>
+                moment(value, "HH:mm").isSameOrAfter(
+                  moment().add(10, "minutes")
+                )
+              ),
+        }),
     }),
     onSubmit({ task, dueDate, dueTime }, actions) {
       reqCreateTask({
@@ -85,9 +94,9 @@ const FolderOptions = ({
           toggleModal();
           actions.resetForm({
             values: {
-              task: '',
-              dueDate: moment().format('YYYY-MM-DD'),
-              dueTime: moment().add(20, 'minutes').format('HH:mm'),
+              task: "",
+              dueDate: moment().format("YYYY-MM-DD"),
+              dueTime: moment().add(20, "minutes").format("HH:mm"),
             },
           });
           actions.setTouched({
@@ -120,13 +129,11 @@ const FolderOptions = ({
           <form onSubmit={formik.handleSubmit}>
             <label
               htmlFor="task"
-              aria-invalid={
-                formik.touched.task && !!formik.errors.task
-              }
+              aria-invalid={formik.touched.task && !!formik.errors.task}
             >
               {formik.touched.task && formik.errors.task
                 ? formik.errors.task
-                : 'Task name'}
+                : "Task name"}
               <input
                 type="text"
                 name="task"
@@ -135,21 +142,17 @@ const FolderOptions = ({
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.task}
-                aria-invalid={
-                  formik.touched.task && !!formik.errors.task
-                }
+                aria-invalid={formik.touched.task && !!formik.errors.task}
               />
             </label>
             <div className="grid">
               <label
                 htmlFor="dueDate"
-                aria-invalid={
-                  formik.touched.dueDate && !!formik.errors.dueDate
-                }
+                aria-invalid={formik.touched.dueDate && !!formik.errors.dueDate}
               >
                 {formik.touched.dueDate && formik.errors.dueDate
                   ? formik.errors.dueDate
-                  : 'Due date'}
+                  : "Due date"}
 
                 <input
                   type="date"
@@ -165,13 +168,11 @@ const FolderOptions = ({
               </label>
               <label
                 htmlFor="dueTime"
-                aria-invalid={
-                  formik.touched.dueTime && !!formik.errors.dueTime
-                }
+                aria-invalid={formik.touched.dueTime && !!formik.errors.dueTime}
               >
                 {formik.touched.dueTime && formik.errors.dueTime
                   ? formik.errors.dueTime
-                  : 'Time'}
+                  : "Time"}
 
                 <input
                   type="time"
@@ -190,11 +191,7 @@ const FolderOptions = ({
               <button type="submit" aria-busy={loading}>
                 Add
               </button>
-              <button
-                className="secondary"
-                onClick={toggleModal}
-                type="button"
-              >
+              <button className="secondary" onClick={toggleModal} type="button">
                 Cancel
               </button>
             </div>
@@ -207,9 +204,7 @@ const FolderOptions = ({
             <button
               onClick={(e) => {
                 toggleModal(e);
-                modalRef.current
-                  .querySelector("input[type='text']")
-                  .focus();
+                modalRef.current.querySelector("input[type='text']").focus();
               }}
             >
               Add Task

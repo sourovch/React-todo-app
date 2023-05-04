@@ -22,7 +22,7 @@ const client = new ApolloClient({
   link: concat(
     authMiddleware,
     createUploadLink({
-      uri: 'http://localhost:3001/api/graphql',
+      uri: import.meta.URL || 'http://localhost:3002/api/graphql',
       headers: {
         'Apollo-Require-Preflight': 'true',
       },

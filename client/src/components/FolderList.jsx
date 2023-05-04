@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { useEffect } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
-  DELATE_TASK_MUTATION,
   FOLDER_DELATE_MUTATION,
   GET_FOLDERS_QUERY,
 } from '../utils/gqlQuerys';

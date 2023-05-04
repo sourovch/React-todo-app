@@ -1,10 +1,9 @@
 import { useQuery } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   CREATE_ROOT_TASK_MUTATION,
   ROOT_TASK_QUERY,
 } from '../utils/gqlQuerys';
-import { useOutletContext } from 'react-router-dom';
 import { RiTodoFill } from 'react-icons/ri';
 import Todo from './Todo';
 import FolderOptions from './FolderOptions';
