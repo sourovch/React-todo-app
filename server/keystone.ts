@@ -4,6 +4,11 @@ import { withAuth, session } from './auth';
 
 export default withAuth(
   config({
+    graphql: {
+      apolloConfig: {
+        introspection: true,
+      }
+    },
     db: {
       provider: 'sqlite',
       url: 'file:./keystone.db',
