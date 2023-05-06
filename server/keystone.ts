@@ -13,7 +13,6 @@ export default withAuth(
     db: {
       provider: 'sqlite',
       url: 'file:./keystone.db',
-      useMigrations: true
     },
     lists,
     session,
