@@ -7,7 +7,8 @@ export default withAuth(
     graphql: {
       apolloConfig: {
         introspection: true,
-      }
+      },
+      playground: 'apollo'
     },
     db: {
       provider: 'sqlite',
