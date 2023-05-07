@@ -27,7 +27,7 @@ export default withAuth(
       dpStorage: {
         type: 'image',
         kind: 'local',
-        generateUrl: path => (process.env.URL || 'http://localhost:3002/images/') + path,
+        generateUrl: path => (`${process.env.URL}/images/` || 'http://localhost:3002/images/') + path,
         serverRoute: {
           path: '/images'
         },
