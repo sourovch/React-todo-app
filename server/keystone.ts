@@ -19,7 +19,10 @@ export default withAuth(
     server: {
       port: 3002,
       cors: {
-        origin: [`${process.env.CORS_URL || 'http://localhost:3000'}`],
+        origin: (() => {
+          console.log(process.env.CORS_URL);
+          return  [`${process.env.CORS_URL || 'http://localhost:3000'}`]
+        })(),
         credentials: true
       }
     },
