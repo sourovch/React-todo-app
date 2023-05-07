@@ -17,6 +17,8 @@ const App = () => {
       setLoading(false);
     }, 300);
 
+    console.log(import.meta.URL);
+
     return () => clearTimeout(timeoutkey);
   }, []);
 
