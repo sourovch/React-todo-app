@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import useDebaunce from '../hooks/useDebaunce';
@@ -24,9 +25,7 @@ function ThemeProvider({ children }) {
 
   const debaunceValue = useDebaunce(theme, 1000);
 
-  useEffect(() => {
-    console.log(import.meta.URL);
-  }, [])
+  const themeData = useMemo(() => ({theme, setTheme}), [theme]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -37,7 +36,7 @@ function ThemeProvider({ children }) {
   }, [debaunceValue]);
 
   return (
-    <themeContext.Provider value={{ theme, setTheme }}>
+    <themeContext.Provider value={themeData}>
       {children}
     </themeContext.Provider>
   );
